@@ -1,3 +1,7 @@
+# Download these data sets:
+<a src="https://drive.google.com/file/d/1g0HMZL5gWa_12oOqIv-ziauWt47yRtSx/view?usp=sharing">GoogleDriveLinkForTrue.csv</a>
+<a src="https://drive.google.com/file/d/1ImuB399RTqXGpI_ha1Zk6M8jnWYzPVYH/view?usp=sharing">GoogleDriveLinkForFake.csv</a>
+
 # 📰 Latest News Update (True Data)
 
 **Updated:** March 28, 2026  
