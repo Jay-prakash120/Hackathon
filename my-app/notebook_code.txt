@@ -1,0 +1,214 @@
+Total code cells: 26
+
+============================================================
+CELL 0
+============================================================
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_style("whitegrid")
+
+============================================================
+CELL 1
+============================================================
+fake = pd.read_csv("Fake.csv")
+true = pd.read_csv("True.csv")
+
+data1 = pd.read_csv('True.csv')
+print(data1.info())
+
+============================================================
+CELL 2
+============================================================
+data = pd.read_csv('Fake.csv')
+print(data.info())
+
+============================================================
+CELL 3
+============================================================
+fake["label"] = 0   # Fake news
+true["label"] = 1   # True news
+
+============================================================
+CELL 4
+============================================================
+fake.head()
+true.head()
+
+============================================================
+CELL 5
+============================================================
+data = pd.concat([fake, true], axis=0)
+data.reset_index(drop=True, inplace=True)
+
+============================================================
+CELL 6
+============================================================
+data.info()
+
+============================================================
+CELL 7
+============================================================
+data["content"] = data["title"] + " " + data["text"]
+
+============================================================
+CELL 8
+============================================================
+sns.countplot(data=data, x="label")
+plt.title("Fake vs True News")
+plt.show()
+
+============================================================
+CELL 9
+============================================================
+plt.figure(figsize=(10,5))
+sns.countplot(data=data, x="subject")
+plt.xticks(rotation=90)
+plt.title("News Subjects Distribution")
+plt.show()
+
+============================================================
+CELL 10
+============================================================
+data["text_length"] = data["content"].apply(len)
+
+sns.histplot(data=data, x="text_length", hue="label", bins=50)
+plt.title("Text Length Comparison")
+plt.show()
+
+============================================================
+CELL 11
+============================================================
+from wordcloud import WordCloud
+
+fake_words = " ".join(data[data.label==0]["content"])
+
+wc = WordCloud(width=800, height=400).generate(fake_words)
+plt.figure(figsize = (20,20))
+plt.imshow(wc)
+plt.axis("off")
+plt.title("Fake News WordCloud")
+plt.show()
+
+============================================================
+CELL 12
+============================================================
+true_words = " ".join(data[data.label==1]["content"])
+
+wc = WordCloud(width=1600, height=800).generate(true_words)
+plt.figure(figsize = (20,20))
+plt.imshow(wc)
+plt.axis("off")
+plt.title("True News WordCloud")
+plt.show()
+
+============================================================
+CELL 13
+============================================================
+import nltk
+nltk.download('stopwords')
+
+============================================================
+CELL 14
+============================================================
+import re
+from nltk.corpus import stopwords
+
+stop_words = set(stopwords.words("english"))
+
+def clean_text(text):
+    text = text.lower()
+    text = re.sub(r'[^a-zA-Z]', ' ', text)
+    words = text.split()
+    words = [w for w in words if w not in stop_words]
+    return " ".join(words)
+
+data["clean_content"] = data["content"].apply(clean_text)
+
+
+============================================================
+CELL 15
+============================================================
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+tfidf = TfidfVectorizer(max_features=5000)
+
+X = tfidf.fit_transform(data["clean_content"])
+y = data["label"]
+
+============================================================
+CELL 16
+============================================================
+
+
+============================================================
+CELL 17
+============================================================
+#splitting the 
+from sklearn.model_selection import train_test_split
+
+
+X = data["clean_content"]   # feature
+y = data["label"]           # target
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+
+============================================================
+CELL 18
+============================================================
+#importing libraries to build a pipline
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.svm import LinearSVC
+
+
+============================================================
+CELL 19
+============================================================
+#this pipe line will take the text and vectorise it , and then TF-IDF, then fitting the model
+
+text_clf=Pipeline([("tfidf",TfidfVectorizer()),("clf",LinearSVC())])
+text_clf.fit(X_train,y_train)
+
+============================================================
+CELL 20
+============================================================
+#making prediction using the model
+predictions=text_clf.predict(X_test)
+
+============================================================
+CELL 21
+============================================================
+from sklearn import metrics
+print(metrics.classification_report(y_test,predictions))
+
+============================================================
+CELL 22
+============================================================
+#overall acuracy
+print(metrics.accuracy_score(y_test,predictions))
+
+============================================================
+CELL 23
+============================================================
+#confusion matrix
+print(metrics.confusion_matrix(y_test,predictions))
+
+============================================================
+CELL 24
+============================================================
+test_news = "Middle East War EscalationUS troops were injured at a Saudi air base as attacks on Iran nuclear sites continue and the conflict enters its second month."
+
+prediction = text_clf.predict([test_news])[0]
+
+if prediction == 1:
+    print("✅ True News")
+else:
+    print("❌ Fake News")
+
+============================================================
+CELL 25
+============================================================
+
+

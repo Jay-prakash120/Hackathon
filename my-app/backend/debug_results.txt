@@ -1,0 +1,35 @@
+Loading data...
+Dataset: 44898 total, 23481 fake, 21417 true
+
+Config1 (default TfidfVectorizer): accuracy=0.9947
+Config2 (bigrams+tuned): accuracy=0.9971
+
+=== PREDICTION RESULTS ===
+
+--- Notebook test (TRUE) ---
+  Text: Middle East War EscalationUS troops were injured at a Saudi air base as attacks ...
+  Cleaned: middle east war escalationus troops injured saudi air base attacks iran nuclear ...
+  C1 RAW:     REAL dist=0.013 conf=50.3%
+  C1 CLEANED: REAL dist=0.013 conf=50.3%
+  C2 CLEANED: REAL dist=0.049 conf=51.2%
+
+--- Real news (REAL) ---
+  Text: According to a study published by researchers at MIT, data shows that global tem...
+  Cleaned: according study published researchers mit data shows global temperatures risen d...
+  C1 RAW:     FAKE dist=-0.438 conf=39.2%
+  C1 CLEANED: FAKE dist=-0.438 conf=39.2%
+  C2 CLEANED: FAKE dist=-0.252 conf=43.7%
+
+--- Fake-sounding (FAKE) ---
+  Text: BREAKING Secret government conspiracy EXPOSED They do not want you to know the T...
+  Cleaned: breaking secret government conspiracy exposed want know truth miracle cure big p...
+  C1 RAW:     FAKE dist=-1.857 conf=13.5%
+  C1 CLEANED: FAKE dist=-1.857 conf=13.5%
+  C2 CLEANED: FAKE dist=-1.938 conf=12.6%
+
+--- Reuters style (REAL) ---
+  Text: WASHINGTON (Reuters) - The U.S. Senate voted on Tuesday to pass a new infrastruc...
+  Cleaned: washington reuters senate voted tuesday pass new infrastructure bill worth trill...
+  C1 RAW:     REAL dist=2.283 conf=90.7%
+  C1 CLEANED: REAL dist=2.283 conf=90.7%
+  C2 CLEANED: REAL dist=2.624 conf=93.2%
